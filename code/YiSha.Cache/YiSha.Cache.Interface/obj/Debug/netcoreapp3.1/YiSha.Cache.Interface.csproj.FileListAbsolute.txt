@@ -1,0 +1,9 @@
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\bin\Debug\netcoreapp3.1\YiSha.Cache.Interface.deps.json
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\bin\Debug\netcoreapp3.1\YiSha.Cache.Interface.dll
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\bin\Debug\netcoreapp3.1\YiSha.Cache.Interface.pdb
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\obj\Debug\netcoreapp3.1\YiSha.Cache.Interface.csprojAssemblyReference.cache
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\obj\Debug\netcoreapp3.1\YiSha.Cache.Interface.AssemblyInfoInputs.cache
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\obj\Debug\netcoreapp3.1\YiSha.Cache.Interface.AssemblyInfo.cs
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\obj\Debug\netcoreapp3.1\YiSha.Cache.Interface.csproj.CoreCompileInputs.cache
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\obj\Debug\netcoreapp3.1\YiSha.Cache.Interface.dll
+E:\快速开发框架源码\code\YiSha.Cache\YiSha.Cache.Interface\obj\Debug\netcoreapp3.1\YiSha.Cache.Interface.pdb
