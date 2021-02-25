@@ -1,32 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace YiSha.Util.Extension
 {
+    /// <summary>
+    /// 类型转换
+    /// </summary>
     public static partial class Extensions
     {
         #region 转换为long
-        /// <summary>
-        /// 将object转换为long，若转换失败，则返回0。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static long ParseToLong(this object obj)
-        {
-            try
-            {
-                return long.Parse(obj.ToString());
-            }
-            catch
-            {
-                return 0L;
-            }
-        }
-
         /// <summary>
         /// 将object转换为long，若转换失败，则返回指定值。不抛出异常。  
         /// </summary>
@@ -34,36 +17,18 @@ namespace YiSha.Util.Extension
         /// <param name="defaultValue"></param>
         /// <returns></returns>
         public static long ParseToLong(this string str, long defaultValue)
-        {
-            try
-            {
-                return long.Parse(str);
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
-        #endregion
+            => long.TryParse(str, out long result) ? result : defaultValue;
 
-        #region 转换为int
         /// <summary>
-        /// 将object转换为int，若转换失败，则返回0。不抛出异常。  
+        /// 将object转换为long，若转换失败，则返回0。不抛出异常。  
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static int ParseToInt(this object str)
-        {
-            try
-            {
-                return Convert.ToInt32(str);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
+        public static long ParseToLong(this object str)
+            => ParseToLong(str?.ToString(), 0L);
+        #endregion
 
+        #region 转换为int
         /// <summary>
         /// 将object转换为int，若转换失败，则返回指定值。不抛出异常。 
         /// null返回默认值
@@ -72,56 +37,33 @@ namespace YiSha.Util.Extension
         /// <param name="defaultValue"></param>
         /// <returns></returns>
         public static int ParseToInt(this object str, int defaultValue)
-        {
-            if (str == null)
-            {
-                return defaultValue;
-            }
-            try
-            {
-                return Convert.ToInt32(str);
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
-        #endregion
+            => int.TryParse(str?.ToString(), out int result) ? result : defaultValue;
 
-        #region 转换为short
         /// <summary>
-        /// 将object转换为short，若转换失败，则返回0。不抛出异常。  
+        /// 将object转换为int，若转换失败，则返回0。不抛出异常。  
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static short ParseToShort(this object obj)
-        {
-            try
-            {
-                return short.Parse(obj.ToString());
-            }
-            catch
-            {
-                return 0;
-            }
-        }
+        public static int ParseToInt(this object str)
+            => ParseToInt(str, 0);
+        #endregion
 
+        #region 转换为short
         /// <summary>
         /// 将object转换为short，若转换失败，则返回指定值。不抛出异常。  
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
         public static short ParseToShort(this object str, short defaultValue)
-        {
-            try
-            {
-                return short.Parse(str.ToString());
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
+            => short.TryParse(str?.ToString(), out short result) ? result : defaultValue;
+
+        /// <summary>
+        /// 将object转换为short，若转换失败，则返回0。不抛出异常。  
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static short ParseToShort(this object str)
+            => ParseToShort(str, 0);
         #endregion
 
         #region 转换为demical
@@ -131,16 +73,7 @@ namespace YiSha.Util.Extension
         /// <param name="str"></param>
         /// <returns></returns>
         public static decimal ParseToDecimal(this object str, decimal defaultValue)
-        {
-            try
-            {
-                return decimal.Parse(str.ToString());
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
+            => decimal.TryParse(str?.ToString(), out decimal result) ? result : defaultValue;
 
         /// <summary>
         /// 将object转换为demical，若转换失败，则返回0。不抛出异常。  
@@ -148,16 +81,7 @@ namespace YiSha.Util.Extension
         /// <param name="str"></param>
         /// <returns></returns>
         public static decimal ParseToDecimal(this object str)
-        {
-            try
-            {
-                return decimal.Parse(str.ToString());
-            }
-            catch
-            {
-                return 0;
-            }
-        }
+            => ParseToDecimal(str, 0.0m);
         #endregion
 
         #region 转化为bool
@@ -167,33 +91,15 @@ namespace YiSha.Util.Extension
         /// <param name="str"></param>
         /// <returns></returns>
         public static bool ParseToBool(this object str)
-        {
-            try
-            {
-                return bool.Parse(str.ToString());
-            }
-            catch
-            {
-                return false;
-            }
-        }
+            => ParseToBool(str, false);
 
         /// <summary>
         /// 将object转换为bool，若转换失败，则返回指定值。不抛出异常。  
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static bool ParseToBool(this object str, bool result)
-        {
-            try
-            {
-                return bool.Parse(str.ToString());
-            }
-            catch
-            {
-                return result;
-            }
-        }
+        public static bool ParseToBool(this object str, bool defaultValue)
+            => bool.TryParse(str?.ToString(), out bool result) ? result : defaultValue;
         #endregion
 
         #region 转换为float
@@ -203,33 +109,16 @@ namespace YiSha.Util.Extension
         /// <param name="str"></param>
         /// <returns></returns>
         public static float ParseToFloat(this object str)
-        {
-            try
-            {
-                return float.Parse(str.ToString());
-            }
-            catch
-            {
-                return 0;
-            }
-        }
+            => ParseToFloat(str, 0.0f);
 
         /// <summary>
         /// 将object转换为float，若转换失败，则返回指定值。不抛出异常。  
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static float ParseToFloat(this object str, float result)
-        {
-            try
-            {
-                return float.Parse(str.ToString());
-            }
-            catch
-            {
-                return result;
-            }
-        }
+        public static float ParseToFloat(this object str, float defaultValue)
+            => float.TryParse(str?.ToString(), out float result) ? result : defaultValue;
+
         #endregion
 
         #region 转换为Guid
