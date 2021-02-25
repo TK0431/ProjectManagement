@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using YiSha.Util.Extension;
 
 namespace YiSha.Util
 {
-    public class TextHelper
+    public static class TextHelper
     {
         /// <summary>
         /// 获取默认值
@@ -56,9 +55,6 @@ namespace YiSha.Util
         /// <param name="split"></param>
         /// <returns></returns>
         public static T[] SplitToArray<T>(string value, char split)
-        {
-            T[] arr = value.Split(new string[] { split.ToString() }, StringSplitOptions.RemoveEmptyEntries).CastSuper<T>().ToArray();
-            return arr;
-        }
+            => value?.Split(new string[] { split.ToString(CultureInfo.CurrentCulture) }, StringSplitOptions.RemoveEmptyEntries).CastSuper<T>().ToArray();
     }
 }
