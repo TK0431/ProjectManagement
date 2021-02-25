@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace YiSha.Util.Extension
 {
@@ -121,23 +123,41 @@ namespace YiSha.Util.Extension
 
         #endregion
 
+        #region 转换为double
+        /// <summary>
+        /// 将object转换为double，若转换失败，则返回指定值。不抛出异常。  
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static double ParseToDouble(this object str, double defaultValue)
+            => double.TryParse(str?.ToString(), out double result) ? result : defaultValue;
+
+        /// <summary>
+        /// 将object转换为double，若转换失败，则返回0。不抛出异常。  
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static double ParseToDouble(this object obj)
+            => ParseToDouble(obj, 0.0d);
+        #endregion
+
         #region 转换为Guid
         /// <summary>
         /// 将string转换为Guid，若转换失败，则返回Guid.Empty。不抛出异常。  
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static Guid ParseToGuid(this string str)
-        {
-            try
-            {
-                return new Guid(str);
-            }
-            catch
-            {
-                return Guid.Empty;
-            }
-        }
+        public static Guid ParseToGuid(this object str)
+            => ParseToGuid(str, Guid.Empty);
+
+        /// <summary>
+        /// 将string转换为Guid，若转换失败，则返回Guid.Empty。不抛出异常。  
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static Guid ParseToGuid(this object str, Guid defaultValue)
+            => Guid.TryParse(str?.ToString(), out Guid result) ? result : defaultValue;
         #endregion
 
         #region 转换为DateTime
@@ -146,45 +166,8 @@ namespace YiSha.Util.Extension
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static DateTime ParseToDateTime(this string str)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(str))
-                {
-                    return DateTime.MinValue;
-                }
-                if (str.Contains("-") || str.Contains("/"))
-                {
-                    return DateTime.Parse(str);
-                }
-                else
-                {
-                    int length = str.Length;
-                    switch (length)
-                    {
-                        case 4:
-                            return DateTime.ParseExact(str, "yyyy", System.Globalization.CultureInfo.CurrentCulture);
-                        case 6:
-                            return DateTime.ParseExact(str, "yyyyMM", System.Globalization.CultureInfo.CurrentCulture);
-                        case 8:
-                            return DateTime.ParseExact(str, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-                        case 10:
-                            return DateTime.ParseExact(str, "yyyyMMddHH", System.Globalization.CultureInfo.CurrentCulture);
-                        case 12:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture);
-                        case 14:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
-                        default:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
-                    }
-                }
-            }
-            catch
-            {
-                return DateTime.MinValue;
-            }
-        }
+        public static DateTime ParseToDateTime(this object str)
+            => ParseToDateTime(str, DateTime.MinValue);
 
         /// <summary>
         /// 将string转换为DateTime，若转换失败，则返回默认值。  
@@ -192,43 +175,28 @@ namespace YiSha.Util.Extension
         /// <param name="str"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static DateTime ParseToDateTime(this string str, DateTime? defaultValue)
+        public static DateTime ParseToDateTime(this object str, DateTime defaultValue)
         {
-            try
+            string value = str?.ToString();
+            if (string.IsNullOrEmpty(value)) return defaultValue;
+
+            if (value.Contains("-", StringComparison.Ordinal) || value.Contains("/", StringComparison.Ordinal))
             {
-                if (string.IsNullOrWhiteSpace(str))
-                {
-                    return defaultValue.GetValueOrDefault();
-                }
-                if (str.Contains("-") || str.Contains("/"))
-                {
-                    return DateTime.Parse(str);
-                }
-                else
-                {
-                    int length = str.Length;
-                    switch (length)
-                    {
-                        case 4:
-                            return DateTime.ParseExact(str, "yyyy", System.Globalization.CultureInfo.CurrentCulture);
-                        case 6:
-                            return DateTime.ParseExact(str, "yyyyMM", System.Globalization.CultureInfo.CurrentCulture);
-                        case 8:
-                            return DateTime.ParseExact(str, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-                        case 10:
-                            return DateTime.ParseExact(str, "yyyyMMddHH", System.Globalization.CultureInfo.CurrentCulture);
-                        case 12:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture);
-                        case 14:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
-                        default:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
-                    }
-                }
+                return DateTime.TryParse(value, out DateTime result) ? result : defaultValue;
             }
-            catch
+            else
             {
-                return defaultValue.GetValueOrDefault();
+                string format = value.Length switch
+                {
+                    4 => "yyyy",
+                    6 => "yyyyMM",
+                    8 => "yyyyMMdd",
+                    10 => "yyyyMMddHH",
+                    12 => "yyyyMMddHHmm",
+                    14 => "yyyyMMddHHmmss",
+                    _ => "yyyyMMddHHmmss",
+                };
+                return DateTime.TryParseExact(value, format, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime result) ? result : defaultValue;
             }
         }
         #endregion
@@ -239,95 +207,27 @@ namespace YiSha.Util.Extension
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string ParseToString(this object obj)
-        {
-            try
-            {
-                if (obj == null)
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    return obj.ToString();
-                }
-            }
-            catch
-            {
-                return string.Empty;
-            }
-        }
-        public static string ParseToStrings<T>(this object obj)
-        {
-            try
-            {
-                var list = obj as IEnumerable<T>;
-                if (list != null)
-                {
-                    return string.Join(",", list);
-                }
-                else
-                {
-                    return obj.ToString();
-                }
-            }
-            catch
-            {
-                return string.Empty;
-            }
+        public static string ParseToString(this object str)
+            => str?.ToString();
 
-        }
-        #endregion
-
-        #region 转换为double
-        /// <summary>
-        /// 将object转换为double，若转换失败，则返回0。不抛出异常。  
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static double ParseToDouble(this object obj)
-        {
-            try
-            {
-                return double.Parse(obj.ToString());
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// 将object转换为double，若转换失败，则返回指定值。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        public static double ParseToDouble(this object str, double defaultValue)
-        {
-            try
-            {
-                return double.Parse(str.ToString());
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
+        public static string ParseToStrings<T>(this object str)
+            => str is IEnumerable<T> list ? string.Join(",", list) : str?.ToString();
         #endregion
 
         #region 强制转换类型
         /// <summary>
         /// 强制转换类型
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<TResult> CastSuper<TResult>(this IEnumerable source)
+        public static IEnumerable<T> CastSuper<T>(this IEnumerable<object> source)
         {
+            if (source == null) yield break;
+
             foreach (object item in source)
             {
-                yield return (TResult)Convert.ChangeType(item, typeof(TResult));
+                yield return (T)Convert.ChangeType(item, typeof(T), CultureInfo.CurrentCulture);
             }
         }
         #endregion
